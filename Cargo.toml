@@ -8,7 +8,7 @@ license = "AGPL-3.0"
 repository = "https://github.com/swpu-acm/eval-stack"
 homepage = "https://github.com/swpu-acm/eval-stack"
 description = "Extremely fast async online judge evaluation system for ACM/OI contests."
-keywords = ["oj", "online judge", "acm", "oi"]
+keywords = ["oj", "online-judge", "acm", "oi"]
 
 [dependencies]
 anyhow = "1.0.92"
