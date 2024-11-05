@@ -3,6 +3,7 @@
         "acmer",
         "bitcode",
         "chdir",
+        "covector",
         "fmax",
         "getuid",
         "libc",

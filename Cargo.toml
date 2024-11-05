@@ -1,7 +1,14 @@
 [package]
-name = "acmer-oj"
+name = "eval-stack"
 version = "0.1.0"
 edition = "2021"
+authors = ["苏向夜 <fu050409@163.com>"]
+readme = "README.md"
+license = "AGPL-3.0"
+repository = "https://github.com/swpu-acm/eval-stack"
+homepage = "https://github.com/swpu-acm/eval-stack"
+description = "Extremely fast async online judge evaluation system for ACM/OI contests."
+keywords = ["oj", "online judge", "acm", "oi"]
 
 [dependencies]
 anyhow = "1.0.92"

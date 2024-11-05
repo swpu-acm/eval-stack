@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use acmer_oj::{
+use eval_stack::{
     case::run_test_cases, compile::Language, config::JudgeOptions, utils::rerun_if_not_root,
 };
 use anyhow::Result;
