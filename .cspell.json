@@ -1,0 +1,24 @@
+{
+    "words": [
+        "acmer",
+        "bitcode",
+        "chdir",
+        "fmax",
+        "getuid",
+        "libc",
+        "NEWNS",
+        "prctl",
+        "PRIVS",
+        "rlim",
+        "rlimit",
+        "rustc",
+        "rustup",
+        "setrlimit",
+        "SIGBUS",
+        "SIGILL",
+        "SIGSEGV",
+        "statm",
+        "sysconf",
+        "unistd"
+    ]
+}
