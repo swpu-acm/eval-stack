@@ -30,7 +30,7 @@
     }
   },
   "packages": {
-    "acmer-oj": {
+    "eval-stack": {
       "path": ".",
       "manager": "rust"
     }
