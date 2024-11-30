@@ -13,5 +13,12 @@ keywords = ["oj", "online-judge", "acm", "oi"]
 [dependencies]
 anyhow = "1.0.92"
 libc = "0.2.161"
-nix = { version = "0.29.0", features = ["user"] }
 tokio = { version = "1.41.0", features = ["full"] }
+
+nix = { version = "0.29.0", features = ["user"], optional = true }
+serde = { version = "1.0.215", features = ["derive"], optional = true }
+
+[features]
+default = ["serde"]
+rerun = ["nix"]
+serde = ["dep:serde"]

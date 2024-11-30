@@ -12,7 +12,9 @@ use anyhow::Result;
 
 use crate::utils::get_memory_usage;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[serde(rename_all = "snake_case", tag = "type")]
 pub enum JudgeStatus {
     Accepted,
     WrongAnswer,
@@ -25,6 +27,8 @@ pub enum JudgeStatus {
 }
 
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[serde(rename_all = "camelCase")]
 pub struct JudgeResult {
     pub status: JudgeStatus,
     pub time_used: Duration,
@@ -74,7 +78,7 @@ impl Future for Judge {
                         }
                     }
 
-                    while let Some(extra_line) = stdout_lines.next() {
+                    for extra_line in stdout_lines {
                         if extra_line?.trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
                             != ""
                         {

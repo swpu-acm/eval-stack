@@ -61,20 +61,23 @@ where
 
     let mut results = vec![];
     for (input_file, expected_output_file) in test_cases {
-        results.push(
-            execute(
-                &workspace,
-                exec_path.to_string_lossy(),
-                args,
-                &options,
-                TestCase {
-                    input_file: input_file.into(),
-                    expected_output_file: expected_output_file.into(),
-                },
-                workspace.join("test.out"),
-            )
-            .await?,
-        );
+        let result = execute(
+            &workspace,
+            exec_path.to_string_lossy(),
+            args,
+            &options,
+            TestCase {
+                input_file: input_file.into(),
+                expected_output_file: expected_output_file.into(),
+            },
+            workspace.join("test.out"),
+        )
+        .await?;
+        if options.fast_fail && !matches!(result.status, JudgeStatus::Accepted) {
+            results.push(result);
+            break;
+        }
+        results.push(result);
     }
 
     if clean {
