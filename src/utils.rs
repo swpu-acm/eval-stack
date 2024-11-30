@@ -1,9 +1,4 @@
-use std::{
-    env, fs,
-    process::{self, Command},
-};
-
-use anyhow::Result;
+use std::fs;
 
 pub fn get_memory_usage(pid: u32) -> Option<u64> {
     let statm_path = format!("/proc/{}/statm", pid);
@@ -16,7 +11,13 @@ pub fn get_memory_usage(pid: u32) -> Option<u64> {
     None
 }
 
-pub fn rerun_if_not_root() -> Result<()> {
+#[cfg(feature = "rerun")]
+pub fn rerun_if_not_root() -> anyhow::Result<()> {
+    use std::{
+        env,
+        process::{self, Command},
+    };
+    #[cfg(target_os = "linux")]
     if !nix::unistd::getuid().is_root() {
         let args: Vec<String> = env::args().collect();
         let mut command = Command::new("sudo");
