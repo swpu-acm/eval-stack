@@ -1,5 +1,10 @@
 use std::{
-    fs, future::Future, io::Read, os::unix::process::ExitStatusExt, path::PathBuf, task::Poll,
+    fs,
+    future::Future,
+    io::{BufRead, BufReader},
+    os::unix::process::ExitStatusExt,
+    path::PathBuf,
+    task::Poll,
     time::Duration,
 };
 
@@ -51,18 +56,34 @@ impl Future for Judge {
                 drop(self.child.stdin.take());
                 drop(self.child.stdout.take());
                 if status.success() {
-                    let mut stdout = fs::File::open(&self.stdout_file)?;
-                    let mut expected_out = fs::File::open(&self.expected_output_file)?;
+                    let stdout = BufReader::new(fs::File::open(&self.stdout_file)?);
+                    let expected_out = BufReader::new(fs::File::open(&self.expected_output_file)?);
 
-                    let mut output = String::new();
-                    let mut expected_output = String::new();
-                    stdout.read_to_string(&mut output)?;
-                    expected_out.read_to_string(&mut expected_output)?;
-
-                    if output.trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
-                        == expected_output
-                            .trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                    let mut stdout_lines = stdout.lines();
+                    let mut expected_out_lines = expected_out.lines();
+                    let mut matched = true;
+                    while let (Some(output), Some(expected_output)) =
+                        (stdout_lines.next(), expected_out_lines.next())
                     {
+                        if output?.trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                            != expected_output?
+                                .trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                        {
+                            matched = false;
+                            break;
+                        }
+                    }
+
+                    while let Some(extra_line) = stdout_lines.next() {
+                        if extra_line?.trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                            != ""
+                        {
+                            matched = false;
+                            break;
+                        }
+                    }
+
+                    if matched {
                         Poll::Ready(Ok(JudgeResult {
                             status: JudgeStatus::Accepted,
                             time_used: self.time_used,
