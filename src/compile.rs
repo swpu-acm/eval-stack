@@ -8,6 +8,7 @@ use anyhow::Result;
 use tokio::process::Command;
 
 #[derive(Clone, Copy)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Language {
     C,
     CPP,
