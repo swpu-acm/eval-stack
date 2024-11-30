@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.1.2]
+
+### New Features
+
+- [`839c728`](https://github.com/swpu-acm/eval-stack/commit/839c728fada2e05fd47f0f879565f7d5a5f0a67e) Add serde derive for `Language` struct.
+
 ## \[0.1.1]
 
 ### New Features
