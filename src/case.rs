@@ -65,7 +65,6 @@ where
         "--deny-ffi=*",
         source_file_path.as_str(),
     ];
-    // let deno_args = vec![source_file_path.as_str()];
     let args = match language {
         Language::Python => Some(&py_args),
         Language::NodeJs => Some(&deno_args),
