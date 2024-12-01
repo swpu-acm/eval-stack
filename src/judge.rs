@@ -1,7 +1,7 @@
 use std::{
     fs,
     future::Future,
-    io::{BufRead, BufReader},
+    io::{BufRead, BufReader, Read},
     os::unix::process::ExitStatusExt,
     path::PathBuf,
     task::Poll,
@@ -20,10 +20,22 @@ pub enum JudgeStatus {
     WrongAnswer,
     TimeLimitExceeded,
     MemoryLimitExceeded,
-    RuntimeError,
-    CompileError { message: String },
-    SystemError { code: i32 },
-    SegmentFault,
+    RuntimeError {
+        code: i32,
+        stderr: String,
+    },
+    CompileError {
+        message: String,
+    },
+    SystemError {
+        code: i32,
+        stderr: String,
+        signal: i32,
+    },
+    SegmentFault {
+        code: i32,
+        stderr: String,
+    },
 }
 
 #[derive(Debug)]
@@ -33,6 +45,16 @@ pub struct JudgeResult {
     pub status: JudgeStatus,
     pub time_used: Duration,
     pub memory_used: u64,
+}
+
+impl JudgeResult {
+    pub fn is_accepted(&self) -> bool {
+        matches!(self.status, JudgeStatus::Accepted)
+    }
+
+    pub fn is_wrong_answer(&self) -> bool {
+        !self.is_accepted()
+    }
 }
 
 pub struct Judge {
@@ -65,27 +87,37 @@ impl Future for Judge {
 
                     let mut stdout_lines = stdout.lines();
                     let mut expected_out_lines = expected_out.lines();
-                    let mut matched = true;
-                    while let (Some(output), Some(expected_output)) =
-                        (stdout_lines.next(), expected_out_lines.next())
-                    {
-                        if output?.trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
-                            != expected_output?
-                                .trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
-                        {
-                            matched = false;
-                            break;
-                        }
-                    }
 
-                    for extra_line in stdout_lines {
-                        if extra_line?.trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
-                            != ""
-                        {
-                            matched = false;
-                            break;
+                    let matched = loop {
+                        match (stdout_lines.next(), expected_out_lines.next()) {
+                            (None, None) => break true,
+                            (Some(output), None) => {
+                                if output?
+                                    .trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                                    != ""
+                                {
+                                    break false;
+                                }
+                            }
+                            (None, Some(expected_output)) => {
+                                if expected_output?
+                                    .trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                                    != ""
+                                {
+                                    break false;
+                                }
+                            }
+                            (Some(output), Some(expected_output)) => {
+                                if output?
+                                    .trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                                    != expected_output?
+                                        .trim_end_matches(|c: char| c.is_whitespace() || c == '\n')
+                                {
+                                    break false;
+                                }
+                            }
                         }
-                    }
+                    };
 
                     if matched {
                         Poll::Ready(Ok(JudgeResult {
@@ -101,21 +133,33 @@ impl Future for Judge {
                         }))
                     }
                 } else {
+                    let mut stderr = String::new();
+                    let _ = self
+                        .child
+                        .stderr
+                        .take()
+                        .unwrap()
+                        .read_to_string(&mut stderr);
+                    let code = status.code().unwrap_or(-1);
                     match status.signal() {
                         Some(libc::SIGSEGV) | Some(libc::SIGBUS) | Some(libc::SIGILL) => {
                             Poll::Ready(Ok(JudgeResult {
-                                status: JudgeStatus::SegmentFault,
+                                status: JudgeStatus::SegmentFault { code, stderr },
                                 time_used: self.time_used,
                                 memory_used: self.memory_used,
                             }))
                         }
-                        Some(code) => Poll::Ready(Ok(JudgeResult {
-                            status: JudgeStatus::SystemError { code },
+                        Some(signal) => Poll::Ready(Ok(JudgeResult {
+                            status: JudgeStatus::SystemError {
+                                code,
+                                signal,
+                                stderr,
+                            },
                             time_used: self.time_used,
                             memory_used: self.memory_used,
                         })),
                         None => Poll::Ready(Ok(JudgeResult {
-                            status: JudgeStatus::RuntimeError,
+                            status: JudgeStatus::RuntimeError { code, stderr },
                             time_used: self.time_used,
                             memory_used: self.memory_used,
                         })),

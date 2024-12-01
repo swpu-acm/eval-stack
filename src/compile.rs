@@ -9,12 +9,13 @@ use tokio::process::Command;
 
 #[derive(Clone, Copy)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Language {
     C,
     CPP,
     Rust,
     Python,
-    Go,
+    NodeJs,
 }
 
 pub async fn compile<B: Into<PathBuf>, E: AsRef<str>, O: AsRef<str>>(
@@ -29,7 +30,7 @@ pub async fn compile<B: Into<PathBuf>, E: AsRef<str>, O: AsRef<str>>(
     let output_path = base_path.join(output_file.as_ref());
     let output_path_str = output_path.to_string_lossy();
 
-    let mut command = match language {
+    let command = match language {
         Language::C => {
             let mut command = Command::new("gcc");
             command.args([
@@ -42,7 +43,7 @@ pub async fn compile<B: Into<PathBuf>, E: AsRef<str>, O: AsRef<str>>(
                 "-o",
                 output_path_str.as_ref(),
             ]);
-            command
+            Some(command)
         }
         Language::CPP => {
             let mut command = Command::new("g++");
@@ -56,7 +57,7 @@ pub async fn compile<B: Into<PathBuf>, E: AsRef<str>, O: AsRef<str>>(
                 "-o",
                 output_path_str.as_ref(),
             ]);
-            command
+            Some(command)
         }
         Language::Rust => {
             let rustc_path = Path::new(&env::var("HOME")?)
@@ -75,27 +76,28 @@ pub async fn compile<B: Into<PathBuf>, E: AsRef<str>, O: AsRef<str>>(
                 "-o",
                 output_file.as_ref(),
             ]);
-            command
+            Some(command)
         }
         Language::Python => {
             let mut command = Command::new("python3");
             command.args(["-m", "py_compile", source_path_str.as_ref()]);
-            command
+            Some(command)
         }
-        Language::Go => todo!(),
+        Language::NodeJs => None,
     };
 
-    command.kill_on_drop(true).stdout(Stdio::piped()).spawn()?;
+    if let Some(mut command) = command {
+        command.kill_on_drop(true).stdout(Stdio::piped()).spawn()?;
 
-    let output = command.output().await?;
+        let output = command.output().await?;
 
-    if !output.status.success() {
-        let error_message = String::from_utf8_lossy(&output.stderr).to_string();
-        Err(anyhow::anyhow!(
-            "Failed to compile source code: {}",
-            error_message
-        ))
-    } else {
-        Ok(())
+        if !output.status.success() {
+            let error_message = String::from_utf8_lossy(&output.stderr).to_string();
+            return Err(anyhow::anyhow!(
+                "Failed to compile source code: {}",
+                error_message
+            ));
+        }
     }
+    Ok(())
 }

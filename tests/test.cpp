@@ -8,6 +8,8 @@ int main()
 {
     i64 a, b;
     cin >> a >> b;
-    cout << a + b << endl << endl << endl;
+    cout << a + b << endl;
+    cout << a + b << endl
+         << endl;
     return 0;
 }
