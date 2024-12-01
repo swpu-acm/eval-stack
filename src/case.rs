@@ -1,6 +1,7 @@
 use std::{fs::create_dir_all, path::PathBuf, time::Duration};
 
 use anyhow::Result;
+use which::which;
 
 use crate::{
     compile::{compile, Language},
@@ -31,7 +32,8 @@ where
         .to_string_lossy()
         .to_string();
     let exec_path = match &language {
-        Language::Python => PathBuf::from("python"),
+        Language::Python => which("python")?,
+        Language::NodeJs => which("deno")?,
         _ => workspace.join("out"),
     };
 
@@ -52,9 +54,21 @@ where
         }]);
     };
 
-    let args = vec![source_file_path.as_str()];
+    let py_args = vec![source_file_path.as_str()];
+    let deno_args = vec![
+        "run",
+        format!("--v8-flags=--max-old-space-size={}", options.memory_limit).leak(),
+        "--deny-read=*",
+        "--deny-write=*",
+        "--deny-env=*",
+        "--deny-run=*",
+        "--deny-ffi=*",
+        source_file_path.as_str(),
+    ];
+    // let deno_args = vec![source_file_path.as_str()];
     let args = match language {
-        Language::Python => Some(&args),
+        Language::Python => Some(&py_args),
+        Language::NodeJs => Some(&deno_args),
         _ => None,
     }
     .map(|v| &**v);
@@ -73,7 +87,7 @@ where
             workspace.join("test.out"),
         )
         .await?;
-        if options.fast_fail && !matches!(result.status, JudgeStatus::Accepted) {
+        if options.fail_fast && !matches!(result.status, JudgeStatus::Accepted) {
             results.push(result);
             break;
         }
