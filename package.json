@@ -4,7 +4,8 @@
   "description": "Online Judge core runtime for ACMers",
   "main": "index.js",
   "scripts": {
-    "covector": "covector"
+    "covector": "covector",
+    "test": "cargo test"
   },
   "keywords": [
     "oj",
