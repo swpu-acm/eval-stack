@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.2.1]
+
+### New Features
+
+- [`45b085a`](https://github.com/swpu-acm/eval-stack/commit/45b085a64f35773b18dec6ad2c02c1fb87e783b8) ([#11](https://github.com/swpu-acm/eval-stack/pull/11) by [@fu050409](https://github.com/swpu-acm/eval-stack/../../fu050409)) Support for Java and Golang.
+
 ## \[0.2.0]
 
 ### New Features
