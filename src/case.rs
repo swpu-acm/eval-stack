@@ -34,6 +34,7 @@ where
     let exec_path = match &language {
         Language::Python => which("python")?,
         Language::NodeJs => which("deno")?,
+        Language::Java => which("java")?,
         _ => workspace.join("out"),
     };
 
@@ -65,9 +66,11 @@ where
         "--deny-ffi=*",
         source_file_path.as_str(),
     ];
+    let java_args = vec!["Main"];
     let args = match language {
         Language::Python => Some(&py_args),
         Language::NodeJs => Some(&deno_args),
+        Language::Java => Some(&java_args),
         _ => None,
     }
     .map(|v| &**v);

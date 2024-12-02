@@ -6,6 +6,7 @@
         "covector",
         "fmax",
         "getuid",
+        "javac",
         "libc",
         "NEWNS",
         "prctl",

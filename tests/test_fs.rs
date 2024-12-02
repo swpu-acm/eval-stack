@@ -6,7 +6,7 @@ use eval_stack::{case::run_test_cases, compile::Language, config::JudgeOptions};
 #[tokio::test]
 async fn test_fs() -> Result<()> {
     let current_dir = std::env::current_dir()?;
-    let workspace_path = current_dir.join("workspace");
+    let workspace_path = current_dir.join("fs_workspace");
     let tests_path = current_dir.join("tests");
 
     let results = run_test_cases(

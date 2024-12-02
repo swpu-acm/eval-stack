@@ -5,27 +5,30 @@ use std::{
 };
 
 use anyhow::Result;
-use tokio::process::Command;
+use tokio::{fs::File, io, process::Command};
 
-#[derive(Clone, Copy)]
+#[derive(Default, Debug, Clone, Copy)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
 pub enum Language {
+    #[default]
+    Rust,
     C,
     CPP,
-    Rust,
     Python,
     NodeJs,
+    Golang,
+    Java,
 }
 
-pub async fn compile<B: Into<PathBuf>, E: AsRef<str>, O: AsRef<str>>(
+pub async fn compile<B: Into<PathBuf>, S: Into<PathBuf>, O: AsRef<str>>(
     language: Language,
     base: B,
-    source_file: E,
+    source_file_path: S,
     output_file: O,
 ) -> Result<()> {
     let base_path = Into::<PathBuf>::into(base);
-    let source_path = base_path.join(source_file.as_ref());
+    let source_path = Into::<PathBuf>::into(source_file_path);
     let source_path_str = source_path.to_string_lossy();
     let output_path = base_path.join(output_file.as_ref());
     let output_path_str = output_path.to_string_lossy();
@@ -84,6 +87,27 @@ pub async fn compile<B: Into<PathBuf>, E: AsRef<str>, O: AsRef<str>>(
             Some(command)
         }
         Language::NodeJs => None,
+        Language::Golang => {
+            let mut command = Command::new("go");
+            command.args([
+                "build",
+                "-o",
+                output_path_str.as_ref(),
+                source_path_str.as_ref(),
+            ]);
+            Some(command)
+        }
+        Language::Java => {
+            let java_path = base_path.join("Main.java");
+            let mut command = Command::new("javac");
+            io::copy(
+                &mut File::open(source_path_str.as_ref()).await?,
+                &mut File::create(&java_path).await?,
+            )
+            .await?;
+            command.arg(java_path.to_string_lossy().as_ref());
+            Some(command)
+        }
     };
 
     if let Some(mut command) = command {
