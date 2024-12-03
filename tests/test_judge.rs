@@ -13,12 +13,7 @@ async fn test_rust_judge() -> Result<()> {
         Language::Rust,
         &workspace_path,
         &tests_path.join("test.rs"),
-        JudgeOptions {
-            time_limit: Duration::from_secs(1),
-            memory_limit: 128 * 1024 * 1024,
-            fail_fast: true,
-            no_startup_limits: false,
-        },
+        Default::default(),
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
             (tests_path.join("2.in"), tests_path.join("2.out")),
@@ -41,6 +36,7 @@ async fn test_rust_judge() -> Result<()> {
             memory_limit: 128 * 1024 * 1024,
             fail_fast: true,
             no_startup_limits: false,
+            unsafe_mode: false,
         },
         vec![
             (tests_path.join("any.in"), tests_path.join("any.out")),
@@ -68,12 +64,7 @@ async fn test_cpp_judge() -> Result<()> {
         Language::CPP,
         &workspace_path,
         &tests_path.join("test.cpp"),
-        JudgeOptions {
-            time_limit: Duration::from_secs(1),
-            memory_limit: 128 * 1024 * 1024,
-            fail_fast: true,
-            no_startup_limits: false,
-        },
+        Default::default(),
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
             (tests_path.join("2.in"), tests_path.join("2.out")),
@@ -100,12 +91,7 @@ async fn test_c_judge() -> Result<()> {
         Language::C,
         &workspace_path,
         &tests_path.join("test.c"),
-        JudgeOptions {
-            time_limit: Duration::from_secs(1),
-            memory_limit: 128 * 1024 * 1024,
-            fail_fast: true,
-            no_startup_limits: false,
-        },
+        Default::default(),
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
             (tests_path.join("2.in"), tests_path.join("2.out")),
@@ -132,12 +118,7 @@ async fn test_python_judge() -> Result<()> {
         Language::Python,
         &workspace_path,
         &tests_path.join("test.py"),
-        JudgeOptions {
-            time_limit: Duration::from_secs(1),
-            memory_limit: 128 * 1024 * 1024,
-            fail_fast: true,
-            no_startup_limits: false,
-        },
+        Default::default(),
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
             (tests_path.join("2.in"), tests_path.join("2.out")),
@@ -164,12 +145,7 @@ async fn test_nodejs_judge() -> Result<()> {
         Language::NodeJs,
         &workspace_path,
         &tests_path.join("test.mjs"),
-        JudgeOptions {
-            time_limit: Duration::from_secs(1),
-            memory_limit: 128 * 1024 * 1024,
-            fail_fast: true,
-            no_startup_limits: true,
-        },
+        JudgeOptions::default().no_startup_limits(true),
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
             (tests_path.join("2.in"), tests_path.join("2.out")),
@@ -196,12 +172,7 @@ async fn test_golang_judge() -> Result<()> {
         Language::Golang,
         &workspace_path,
         &tests_path.join("test.go"),
-        JudgeOptions {
-            time_limit: Duration::from_secs(1),
-            memory_limit: 128 * 1024 * 1024,
-            fail_fast: true,
-            no_startup_limits: true,
-        },
+        JudgeOptions::default(),
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
             (tests_path.join("2.in"), tests_path.join("2.out")),
@@ -228,12 +199,7 @@ async fn test_java_judge() -> Result<()> {
         Language::Java,
         &workspace_path,
         &tests_path.join("test.java"),
-        JudgeOptions {
-            time_limit: Duration::from_secs(1),
-            memory_limit: 128 * 1024 * 1024,
-            fail_fast: true,
-            no_startup_limits: true,
-        },
+        JudgeOptions::default().no_startup_limits(true),
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
             (tests_path.join("2.in"), tests_path.join("2.out")),

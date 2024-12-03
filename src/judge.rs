@@ -38,13 +38,23 @@ pub enum JudgeStatus {
     },
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[serde(rename_all = "camelCase")]
 pub struct JudgeResult {
     pub status: JudgeStatus,
     pub time_used: Duration,
     pub memory_used: u64,
+}
+
+impl Default for JudgeResult {
+    fn default() -> Self {
+        Self {
+            status: JudgeStatus::Accepted,
+            time_used: Duration::from_secs(0),
+            memory_used: 0,
+        }
+    }
 }
 
 impl JudgeResult {

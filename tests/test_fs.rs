@@ -18,6 +18,7 @@ async fn test_fs() -> Result<()> {
             memory_limit: 128 * 1024 * 1024,
             fail_fast: true,
             no_startup_limits: false,
+            unsafe_mode: false,
         },
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),
@@ -49,6 +50,7 @@ async fn test_fs() -> Result<()> {
             memory_limit: 128 * 1024 * 1024,
             fail_fast: true,
             no_startup_limits: true,
+            unsafe_mode: false,
         },
         vec![
             (tests_path.join("1.in"), tests_path.join("1.out")),

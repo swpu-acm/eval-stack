@@ -4,10 +4,19 @@ use std::{path::PathBuf, time::Duration};
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[serde(rename_all = "camelCase")]
 pub struct JudgeOptions {
+    /// Maximum time limit in seconds.
     pub time_limit: Duration,
+    /// Maximum memory usage in bytes.
     pub memory_limit: u64,
+    /// Stop running tests after the first failure.
+    ///
+    /// Enable this option for ICPC mode contests.
+    /// Defaults to `true`.
     pub fail_fast: bool,
+    /// Disable setting `RLIMIT_AS` and `seccomp` filter.
     pub no_startup_limits: bool,
+    /// Run without kernel-level sand-boxing.
+    pub unsafe_mode: bool,
 }
 
 impl Default for JudgeOptions {
@@ -15,8 +24,9 @@ impl Default for JudgeOptions {
         Self {
             time_limit: Duration::from_secs(1),
             memory_limit: 128 * 1024 * 1024,
-            fail_fast: false,
+            fail_fast: true,
             no_startup_limits: false,
+            unsafe_mode: false,
         }
     }
 }
