@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.3.0]
+
+### New Features
+
+- [`c6f1b84`](https://github.com/swpu-acm/eval-stack/commit/c6f1b84f2e8f8a1818da3bc73645e0716b4a4818) ([#14](https://github.com/swpu-acm/eval-stack/pull/14) by [@fu050409](https://github.com/swpu-acm/eval-stack/../../fu050409)) Add online judge runtime engine support for eval-stack.
+
 ## \[0.2.1]
 
 ### New Features
