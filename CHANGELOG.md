@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.3.2]
+
+### Performance Improvements
+
+- [`0bf9b63`](https://github.com/swpu-acm/eval-stack/commit/0bf9b6391a2aa4b1408174513902489ecd3a4d2e) ([#18](https://github.com/swpu-acm/eval-stack/pull/18) by [@fu050409](https://github.com/swpu-acm/eval-stack/../../fu050409)) Improve the performance of the async I/O operations.
+
 ## \[0.3.1]
 
 ### Bug Fixes
