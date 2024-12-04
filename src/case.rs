@@ -1,6 +1,7 @@
-use std::{fs::create_dir_all, path::PathBuf, time::Duration};
+use std::{path::PathBuf, time::Duration};
 
 use anyhow::Result;
+use tokio::fs::{create_dir_all, remove_dir_all};
 use which::which;
 
 use crate::{
@@ -25,7 +26,7 @@ where
     let workspace: PathBuf = workspace.into();
 
     if !workspace.exists() {
-        create_dir_all(&workspace)?;
+        create_dir_all(&workspace).await?;
     }
 
     let source_file_path = Into::<PathBuf>::into(source_file_path)
@@ -97,7 +98,7 @@ where
     }
 
     if clean {
-        if let Err(e) = std::fs::remove_dir_all(workspace) {
+        if let Err(e) = remove_dir_all(workspace).await {
             anyhow::bail!("Failed to remove workspace: {}", e);
         }
     }
