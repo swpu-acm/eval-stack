@@ -1,5 +1,16 @@
 # Changelog
 
+## \[0.3.1]
+
+### Bug Fixes
+
+- [`485b1ae`](https://github.com/swpu-acm/eval-stack/commit/485b1ae3b129d439b657f98e1eabaa0f5f13e652) ([#16](https://github.com/swpu-acm/eval-stack/pull/16) by [@fu050409](https://github.com/swpu-acm/eval-stack/../../fu050409)) Fixed compile error caused some compiler don't recognize unknown file extension.
+- [`485b1ae`](https://github.com/swpu-acm/eval-stack/commit/485b1ae3b129d439b657f98e1eabaa0f5f13e652) ([#16](https://github.com/swpu-acm/eval-stack/pull/16) by [@fu050409](https://github.com/swpu-acm/eval-stack/../../fu050409)) Fixed `serde` renaming to `lowercase` instead of `camelCase`.
+
+### Chores
+
+- [`485b1ae`](https://github.com/swpu-acm/eval-stack/commit/485b1ae3b129d439b657f98e1eabaa0f5f13e652) ([#16](https://github.com/swpu-acm/eval-stack/pull/16) by [@fu050409](https://github.com/swpu-acm/eval-stack/../../fu050409)) Specify the release profile in `Cargo.toml` to improve the performance.
+
 ## \[0.3.0]
 
 ### New Features
