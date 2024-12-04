@@ -1,7 +1,5 @@
 use std::{
-    env,
-    path::{Path, PathBuf},
-    process::Stdio,
+    env, ffi::OsStr, path::{Path, PathBuf}, process::Stdio
 };
 
 use anyhow::Result;
@@ -9,7 +7,7 @@ use tokio::{fs::File, io, process::Command};
 
 #[derive(Default, Debug, Clone, Copy)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "snake_case"))]
+#[cfg_attr(feature = "serde", serde(rename_all = "lowercase"))]
 pub enum Language {
     #[default]
     Rust,
@@ -98,13 +96,15 @@ pub async fn compile<B: Into<PathBuf>, S: Into<PathBuf>, O: AsRef<str>>(
             Some(command)
         }
         Language::Java => {
-            let java_path = base_path.join("Main.java");
             let mut command = Command::new("javac");
-            io::copy(
-                &mut File::open(source_path_str.as_ref()).await?,
-                &mut File::create(&java_path).await?,
-            )
-            .await?;
+            let java_path = base_path.join("Main.java");
+            if source_path.file_name() != Some(OsStr::new("Main.java")) {
+                io::copy(
+                    &mut File::open(source_path_str.as_ref()).await?,
+                    &mut File::create(&java_path).await?,
+                )
+                .await?;
+            }
             command.arg(java_path.to_string_lossy().as_ref());
             Some(command)
         }

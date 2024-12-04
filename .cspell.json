@@ -4,6 +4,7 @@
         "bitcode",
         "chdir",
         "chrono",
+        "codegen",
         "covector",
         "fmax",
         "getuid",

@@ -12,6 +12,7 @@ use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 
 use crate::case::run_test_cases;
+use crate::compile::Language;
 use crate::config::JudgeOptions;
 use crate::engine::models::Status;
 use crate::judge::{JudgeResult, JudgeStatus};
@@ -71,7 +72,15 @@ pub async fn handle_submission(
         create_dir_all(&workspace)?;
     }
 
-    let source_file_path = workspace.join("source.code");
+    let source_file_path = workspace.join(match submission.lang {
+        Language::C => "main.c",
+        Language::CPP => "main.cpp",
+        Language::Java => "Main.java",
+        Language::Python => "main.py",
+        Language::Rust => "main.rs",
+        Language::NodeJs => "main.js",
+        Language::Golang => "main.go",
+    });
     let mut file = File::create(&source_file_path).await?;
     file.write_all(submission.code.as_bytes()).await?;
 
