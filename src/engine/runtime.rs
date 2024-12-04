@@ -98,7 +98,7 @@ pub async fn handle_submission(
         submission
             .test_cases
             .into_iter()
-            .map(|_tc| ("tests/1.in", "tests/1.out"))
+            .map(|tc| (tc.input, tc.output))
             .collect(),
         true,
     )
