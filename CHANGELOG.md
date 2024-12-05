@@ -1,5 +1,11 @@
 # Changelog
 
+## \[0.3.3]
+
+### Bug Fixes
+
+- [`6aa6076`](https://github.com/swpu-acm/eval-stack/commit/6aa607641a2b66c2ad03a1c937bafa34087427e7) ([#20](https://github.com/swpu-acm/eval-stack/pull/20) by [@fu050409](https://github.com/swpu-acm/eval-stack/../../fu050409)) Fixed `eval-stack` won't clean up the temporary files if failed to compile.
+
 ## \[0.3.2]
 
 ### Performance Improvements
