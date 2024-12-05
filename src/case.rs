@@ -47,6 +47,11 @@ where
     )
     .await
     {
+        if clean {
+            if let Err(e) = remove_dir_all(workspace).await {
+                anyhow::bail!("Failed to remove workspace: {}", e);
+            }
+        }
         return Ok(vec![JudgeResult {
             status: JudgeStatus::CompileError {
                 message: e.to_string(),
