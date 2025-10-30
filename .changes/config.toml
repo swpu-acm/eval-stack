@@ -21,7 +21,7 @@ User-Agent = "Semifold 0.1.10"
 
 [[resolver.rust.prepublish]]
 command = "cargo"
-args = ["generate-lockfile", "--offline"]
+args = ["generate-lockfile"]
 
 [[resolver.rust.publish]]
 command = "cargo"
