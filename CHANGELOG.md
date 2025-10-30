@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.4
+
+### Chores
+
+- [`ae26725`](https://github.com/swpu-acm/eval-stack/commit/ae267252ecc3775f778c0c2dfdda684e6316b455): Bump versions of outdated dependencies.
+
 ## \[0.3.3]
 
 ### Bug Fixes
