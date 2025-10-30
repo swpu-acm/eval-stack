@@ -23,8 +23,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: Install Semifold
         run: cargo install semifold
+      - name: Cargo Login
+        run: cargo login ${{ secrets.crate_token }}
       - name: Semifold CI
         run: semifold ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

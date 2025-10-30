@@ -19,13 +19,14 @@ url = "https://crates.io/api/v1/crates/{{ package.name }}/{{ package.version }}"
 [resolver.rust.pre-check.extra-headers]
 User-Agent = "Semifold 0.1.10"
 
+[[resolver.rust.prepublish]]
+command = "cargo"
+args = ["generate-lockfile", "--offline"]
+
 [[resolver.rust.publish]]
 command = "cargo"
 args = ["publish"]
 
 [[resolver.rust.post-version]]
 command = "cargo"
-args = [
-    "generate-lockfile",
-    "--offline",
-]
+args = ["generate-lockfile", "--offline"]
