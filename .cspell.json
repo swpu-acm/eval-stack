@@ -21,6 +21,7 @@
         "rustup",
         "seccomp",
         "seccompiler",
+        "semifold",
         "serde",
         "setrlimit",
         "SIGBUS",
