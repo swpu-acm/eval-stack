@@ -21,7 +21,7 @@ jobs:
       - name: Cache rust artifacts
         uses: Swatinem/rust-cache@v2
       - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@nightly
       - name: Install Semifold
         run: cargo install semifold
       - name: Semifold Status
