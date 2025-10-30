@@ -24,7 +24,7 @@ jobs:
       - name: Install Semifold
         run: cargo install semifold
       - name: Semifold CI
-        run: semifold ci
+        run: semifold ci --debug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CARGO_REGISTRY_TOKEN: ${{ secrets.crate_token }}
